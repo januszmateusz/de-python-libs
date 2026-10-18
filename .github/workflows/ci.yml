@@ -15,7 +15,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5            #TODO: przypnij do SHA
+      - uses: actions/checkout@v7            #TODO: przypnij do SHA
       - uses: astral-sh/setup-uv@v7          #TODO: przypnij do SHA
         with:
           version: ${{ env.UV_VERSION }}
@@ -31,7 +31,7 @@ jobs:
       matrix:
         python: ["3.12", "3.13", "3.14"]
     steps:
-      - uses: actions/checkout@v5            #TODO: przypnij do SHA
+      - uses: actions/checkout@v7            #TODO: przypnij do SHA
       - uses: astral-sh/setup-uv@v7          #TODO: przypnij do SHA
         with:
           version: ${{ env.UV_VERSION }}
@@ -43,7 +43,7 @@ jobs:
   test-lowest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5            #TODO: przypnij do SHA
+      - uses: actions/checkout@v7            #TODO: przypnij do SHA
       - uses: astral-sh/setup-uv@v7          #TODO przypnij do SHA
         with:
           version: ${{ env.UV_VERSION }}
@@ -55,7 +55,7 @@ jobs:
     needs: [lint, test, test-lowest]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5            #TODO: przypnij do SHA
+      - uses: actions/checkout@v7            #TODO: przypnij do SHA
       - uses: astral-sh/setup-uv@v7          #TODO: przypnij do SHA
         with:
           version: ${{ env.UV_VERSION }}
