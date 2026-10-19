@@ -23,3 +23,8 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv.workspace]
+members = [
+    "tracks/01-pytest-pydantic",
+]

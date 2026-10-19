@@ -2,6 +2,12 @@ version = 1
 revision = 3
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "de-python-libs",
+    "flights",
+]
+
 [[package]]
 name = "annotated-types"
 version = "0.8.0"
@@ -42,6 +48,21 @@ dev = [
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "ruff", specifier = ">=0.16.9" },
 ]
+
+[[package]]
+name = "flights"
+version = "0.1.0"
+source = { editable = "tracks/01-pytest-pydantic" }
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=9.1.1" }]
 
 [[package]]
 name = "iniconfig"
