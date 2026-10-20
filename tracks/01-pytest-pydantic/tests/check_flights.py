@@ -1,2 +1,2 @@
 def test_lot():
-    assert 'LOT' == 'LOT'
+    assert "LOT" == "LOT"

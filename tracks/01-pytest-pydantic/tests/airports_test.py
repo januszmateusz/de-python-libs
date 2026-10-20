@@ -1,2 +1,2 @@
 def test_krk():
-    assert 'KRK' == 'KRK'
+    assert "KRK" == "KRK"

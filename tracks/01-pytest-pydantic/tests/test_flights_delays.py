@@ -1,28 +1,52 @@
+import pytest
+
 import flights.delays as delays
-from helpers import assert_same_flight
 
-def test_classify_delay():
-    assert delays.classify_delay(5) == "on_time"
-    assert delays.classify_delay(20) == "minor"
-    assert delays.classify_delay(100) == "major"
-    assert delays.classify_delay(200) == "severe"
 
-# def test_first_failure():
-#     assert "WAW" == "XXX"
+def test_average_delay_returns_mean_for_whole_number_result() -> None:
+    delays_list = [10, 20, 30]
+    result = delays.average_delay(delays_list)
+    assert result == pytest.approx(20.0)
 
-# def test_second_failure():
-#     assert {"airport":"WAW", "city":"Warsaw", "other":"aaa"} == {"airport":"WAW", "city":"Krakow", "other":"aaa"}
 
-# def test_third_failure():
-#     assert ["LOT", "1234", "WAW"] == ["LOT", "1234", "WAW"]
+def test_average_delay_returns_mean_for_fractional_result() -> None:
+    delays_list = [10, 20, 25]
+    result = delays.average_delay(delays_list)
+    assert result == pytest.approx(18.333, rel=1e-3)
 
-# def test_fourth_failure():
-#     assert {"LOT", "WAW", "KRK"} == {"LOT", "WAW", "KRK", "GDN"}
 
-def test_flight_via_helper() -> None:
-    actual = {"airport": "WAW", "city": "Warsaw", "other": "aaa"}
-    expected = {"airport": "WAW", "city": "Warsaw", "other": "aaa"}
-    assert_same_flight(actual, expected)
+def test_average_delay_raises_for_empty_list() -> None:
+    delays_list: list[int] = []
+    with pytest.raises(ValueError, match="empty list"):
+        delays.average_delay(delays_list)
 
-# def test_classify_delay_minus_500():
-#    assert delays.classify_delay(-500) == "on_time"
+
+def test_on_time_performance_returns_half_when_two_of_four_on_time() -> None:
+    delays_list = [0, 10, 20, 30]
+    result = delays.on_time_performance(delays_list)
+    assert result == pytest.approx(0.5)
+
+
+def test_on_time_performance_treats_14_minutes_as_on_time_and_15_as_late() -> None:
+    delays_list = [14, 15]
+    result = delays.on_time_performance(delays_list)
+    assert result == pytest.approx(0.5)
+
+
+def test_on_time_performance_returns_one_when_all_flights_on_time() -> None:
+    delays_list = [0, 5, 10, 14]
+    result = delays.on_time_performance(delays_list)
+    assert result == pytest.approx(1.0)
+
+
+def test_on_time_performance_returns_zero_when_no_flight_on_time() -> None:
+    delays_list = [15, 60, 200]
+    result = delays.on_time_performance(delays_list)
+    assert result == pytest.approx(0.0)
+
+
+def test_on_time_performance_raises_for_empty_list() -> None:
+    delays_list: list[int] = []
+    with pytest.raises(ValueError, match="empty list"):
+        delays.on_time_performance(delays_list)
+        
