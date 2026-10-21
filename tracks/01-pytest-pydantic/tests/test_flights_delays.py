@@ -2,6 +2,7 @@ import pytest
 
 from flights import delays
 
+
 def test_classify_delay_raises_for_delay_below_minus_120() -> None:
     delay_minutes = -121
     with pytest.raises(ValueError, match="below allowed minimum"):
@@ -61,6 +62,7 @@ def test_classify_delay_returns_severe_for_180_minutes_delay() -> None:
     result = delays.classify_delay(delay_minutes)
     assert result == "severe"
 
+
 def test_average_delay_returns_mean_for_whole_number_result() -> None:
     delays_list = [10, 20, 30]
     result = delays.average_delay(delays_list)
@@ -107,4 +109,3 @@ def test_on_time_performance_raises_for_empty_list() -> None:
     delays_list: list[int] = []
     with pytest.raises(ValueError, match="empty list"):
         delays.on_time_performance(delays_list)
-        

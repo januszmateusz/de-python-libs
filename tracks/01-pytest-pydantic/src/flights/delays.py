@@ -1,6 +1,7 @@
 ON_TIME_THRESHOLD_MINUTES = 15
 """Lot jest punktualny, gdy opóźnienie < 15 min (standard branżowy A15)."""
 
+
 def classify_delay(delay_minutes: int) -> str:
     """
     "early" < 0, "on_time" 0–14, "minor" 15–59,
