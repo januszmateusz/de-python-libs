@@ -8,7 +8,7 @@ def classify_delay(delay_minutes: int) -> str:
     ValueError, gdy delay_minutes < -120.
     """
     if delay_minutes < -120:
-        raise ValueError("Delay cannot be less than -120 minutes.")
+        raise ValueError(f"Delay ({delay_minutes}) is below allowed minimum (-120).")
     elif delay_minutes < 0:
         return "early"
     elif delay_minutes < ON_TIME_THRESHOLD_MINUTES:
