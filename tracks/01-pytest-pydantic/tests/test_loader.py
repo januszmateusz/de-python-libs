@@ -1,27 +1,16 @@
-import pytest
-
 from flights.loader import filter_active_flights
 from flights.models import Flight
 
-FLIGHTS = [
-    Flight("LO123", "WAW", "KRK", "ACTIVE", 10),
-    Flight("LO456", "WAW", "GDN", "CANCELLED", 0),
-    Flight("FR789", "KRK", "WAW", "ACTIVE", 45),
-]
+# FLIGHTS = [
+#     Flight("LO123", "WAW", "KRK", "ACTIVE", 10),
+#     Flight("LO456", "WAW", "GDN", "CANCELLED", 0),
+#     Flight("FR789", "KRK", "WAW", "ACTIVE", 45),
+# ]
+
 
 # @pytest.fixture
 # def mixed_flights() -> list[Flight]:
-#     """Trzy loty: dwa aktywne (WAW, KRK) i jeden odwołany (WAW)."""
-#     return [
-#         Flight("LO123", "WAW", "KRK", "ACTIVE", 10),
-#         Flight("LO456", "WAW", "GDN", "CANCELLED", 0),
-#         Flight("FR789", "KRK", "WAW", "ACTIVE", 45),
-#     ]
-
-
-@pytest.fixture
-def mixed_flights() -> list[Flight]:
-    return FLIGHTS
+#     return FLIGHTS
 
 
 def test_filter_active_flights_returns_only_active_flights(

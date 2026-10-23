@@ -29,3 +29,9 @@ addopts = [
     "--strict-config",
     "--import-mode=importlib",
 ]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+mypy_path = "src,tests"
+explicit_package_bases = true
