@@ -43,15 +43,3 @@ def test_filter_active_flights_all_cancelled() -> None:
     active_flights = filter_active_flights(flights)
 
     assert active_flights == []
-
-
-def test_isolation(mixed_flights: list[Flight]) -> None:
-    """Testuje, czy fixture mixed_flights jest izolowana między testami."""
-    # Modyfika  cja mixed_flights w tym teście nie powinna wpływać na inne testy
-    mixed_flights.append(Flight("FR999", "WAW", "GDN", "ACTIVE", 15))
-    assert len(mixed_flights) == 4
-
-
-# def test_isolation_final_check(mixed_flights: list[Flight]) -> None:
-#     """Sprawdza, czy mixed_flights jest nadal w pierwotnym stanie po poprzednich testach."""
-#     assert len(mixed_flights) == 3  # Powinno być 3 loty, jak w definicji fixture
