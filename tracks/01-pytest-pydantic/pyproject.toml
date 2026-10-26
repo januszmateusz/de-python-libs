@@ -35,3 +35,6 @@ strict = true
 files = ["src", "tests"]
 mypy_path = "src,tests"
 explicit_package_bases = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["flights"]
