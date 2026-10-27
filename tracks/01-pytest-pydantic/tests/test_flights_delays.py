@@ -3,76 +3,60 @@ import pytest
 from flights import delays
 
 
-def test_classify_delay_raises_for_delay_below_minus_120() -> None:
-    delay_minutes = -121
+@pytest.mark.parametrize(
+    ("delay_minutes", "expected"),
+    [
+        (-120, "early"),
+        (-1, "early"),
+        (0, "on_time"),
+        (14, "on_time"),
+        (15, "minor"),
+        (59, "minor"),
+        (60, "major"),
+        (179, "major"),
+        (180, "severe"),
+    ],
+)
+def test_classify_delay_returns_category_at_boundaries(
+    delay_minutes: int, expected: str
+) -> None:
+    assert delays.classify_delay(delay_minutes) == expected
+
+
+@pytest.mark.parametrize(
+    "delay_minutes",
+    [
+        -121,
+        -500,
+    ],
+)
+def test_classify_delay_raises_for_delay_below_minus_120(delay_minutes: int) -> None:
     with pytest.raises(ValueError, match="below allowed minimum"):
         delays.classify_delay(delay_minutes)
 
 
-def test_classify_delay_returns_early_at_minus_120() -> None:
-    delay_minutes = -120
-    result = delays.classify_delay(delay_minutes)
-    assert result == "early"
-
-
-def test_classify_delay_returns_early_for_minus_1() -> None:
-    delay_minutes = -1
-    result = delays.classify_delay(delay_minutes)
-    assert result == "early"
-
-
-def test_classify_delay_returns_on_time_for_zero_delay() -> None:
-    delay_minutes = 0
-    result = delays.classify_delay(delay_minutes)
-    assert result == "on_time"
-
-
-def test_classify_delay_returns_on_time_for_14_minutes_delay() -> None:
-    delay_minutes = 14
-    result = delays.classify_delay(delay_minutes)
-    assert result == "on_time"
-
-
-def test_classify_delay_returns_minor_for_15_minutes_delay() -> None:
-    delay_minutes = 15
-    result = delays.classify_delay(delay_minutes)
-    assert result == "minor"
-
-
-def test_classify_delay_returns_minor_for_59_minutes_delay() -> None:
-    delay_minutes = 59
-    result = delays.classify_delay(delay_minutes)
-    assert result == "minor"
-
-
-def test_classify_delay_returns_major_for_60_minutes_delay() -> None:
-    delay_minutes = 60
-    result = delays.classify_delay(delay_minutes)
-    assert result == "major"
-
-
-def test_classify_delay_returns_major_for_179_minutes_delay() -> None:
-    delay_minutes = 179
-    result = delays.classify_delay(delay_minutes)
-    assert result == "major"
-
-
-def test_classify_delay_returns_severe_for_180_minutes_delay() -> None:
-    delay_minutes = 180
-    result = delays.classify_delay(delay_minutes)
-    assert result == "severe"
-
-
-def test_average_delay_returns_mean_for_whole_number_result() -> None:
-    delays_list = [10, 20, 30]
+@pytest.mark.parametrize(
+    ("delays_list", "expected"),
+    [
+        pytest.param(
+            [10, 20, 30],
+            20.0,
+            id="mean_is_whole_number",
+        ),
+        pytest.param(
+            [10, 20, 25],
+            18.333,
+            id="mean_is_fractional",
+        ),
+    ],
+)
+def test_average_delay_returns_expected_mean(
+    delays_list: list[int],
+    expected: float,
+) -> None:
     result = delays.average_delay(delays_list)
-    assert result == pytest.approx(20.0)
 
-
-def test_average_delay_returns_mean_for_fractional_result() -> None:
-    delays_list = [10, 20, 25]
-    result = delays.average_delay(delays_list)
-    assert result == pytest.approx(18.333, rel=1e-3)
+    assert result == pytest.approx(expected, rel=1e-3)
 
 
 def test_average_delay_raises_for_empty_list() -> None:
@@ -81,28 +65,21 @@ def test_average_delay_raises_for_empty_list() -> None:
         delays.average_delay(delays_list)
 
 
-def test_on_time_performance_returns_half_when_two_of_four_on_time() -> None:
-    delays_list = [0, 10, 20, 30]
+@pytest.mark.parametrize(
+    ("delays_list", "expected"),
+    [
+        pytest.param([0, 10, 20, 30], 0.5, id="half_of_flights_on_time"),
+        pytest.param([14, 15], 0.5, id="boundary_14_on_time_15_late"),
+        pytest.param([0, 5, 10, 14], 1.0, id="all_flights_on_time_at_14_minute_limit"),
+        pytest.param([15, 60, 200], 0.0, id="all_flights_late_from_15_minutes"),
+    ],
+)
+def test_on_time_performance_returns_expected_ratio(
+    delays_list: list[int], expected: float
+) -> None:
     result = delays.on_time_performance(delays_list)
-    assert result == pytest.approx(0.5)
 
-
-def test_on_time_performance_treats_14_minutes_as_on_time_and_15_as_late() -> None:
-    delays_list = [14, 15]
-    result = delays.on_time_performance(delays_list)
-    assert result == pytest.approx(0.5)
-
-
-def test_on_time_performance_returns_one_when_all_flights_on_time() -> None:
-    delays_list = [0, 5, 10, 14]
-    result = delays.on_time_performance(delays_list)
-    assert result == pytest.approx(1.0)
-
-
-def test_on_time_performance_returns_zero_when_no_flight_on_time() -> None:
-    delays_list = [15, 60, 200]
-    result = delays.on_time_performance(delays_list)
-    assert result == pytest.approx(0.0)
+    assert result == pytest.approx(expected)
 
 
 def test_on_time_performance_raises_for_empty_list() -> None:

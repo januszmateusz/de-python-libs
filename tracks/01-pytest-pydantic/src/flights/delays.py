@@ -14,7 +14,7 @@ def classify_delay(delay_minutes: int) -> str:
         return "early"
     elif delay_minutes < ON_TIME_THRESHOLD_MINUTES:
         return "on_time"
-    elif delay_minutes <= 59:
+    elif delay_minutes < 60:
         return "minor"
     elif delay_minutes <= 179:
         return "major"

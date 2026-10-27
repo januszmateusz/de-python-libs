@@ -9,7 +9,7 @@ from flights.models import Flight
 pytest.register_assert_rewrite("helpers")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def mixed_flights() -> list[Flight]:
     """Trzy loty: dwa aktywne (WAW, KRK) i jeden odwołany (WAW)."""
     return [
@@ -20,19 +20,23 @@ def mixed_flights() -> list[Flight]:
 
 
 @pytest.fixture
-def make_flights_csv(tmp_path: Path) -> MakeFlightsCsv:
+def make_flights_csv(
+    tmp_path: Path,
+    line_ending: str,
+) -> MakeFlightsCsv:
     """Fabryka: zapisuje w tmp_path plik CSV z nagłówkiem i podanymi surowymi wierszami."""
 
-    def _make(
+    def _make_flights_csv(
         rows: list[str],
         header: str = FLIGHTS_HEADER,
         filename: str = "flights.csv",
     ) -> Path:
         path = tmp_path / filename
-        path.write_text("\n".join([header, *rows]) + "\n", encoding="utf-8")
+        content = line_ending.join([header, *rows]) + line_ending
+        path.write_text(content, encoding="utf-8", newline="")
         return path
 
-    return _make
+    return _make_flights_csv
 
 
 @pytest.fixture(scope="session")
@@ -54,3 +58,9 @@ def reference_airports_csv(tmp_path_factory: pytest.TempPathFactory) -> Path:
         writer.writerows(airports_data)
 
     return file_path
+
+
+@pytest.fixture(params=["\n", "\r\n"], ids=["LF", "CRLF"])
+def line_ending(request: pytest.FixtureRequest) -> str:
+    """Koniec linii w generowanych plikach CSV: LF i CRLF (każdy zależny test uruchamia się dwukrotnie)."""
+    return str(request.param)
