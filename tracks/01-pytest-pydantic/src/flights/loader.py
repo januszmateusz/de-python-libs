@@ -25,7 +25,7 @@ def read_flights_csv(path: Path) -> list[Flight]:
 
 def filter_active_flights(flights: list[Flight]) -> list[Flight]:
     """Zwraca loty, które nie zostały odwołane."""
-    return [f for f in flights if f.status != "CANCELLED"]
+    return [f for f in flights if f.status.upper() != "CANCELLED"]
 
 
 def read_flights_csv_lenient(path: Path) -> list[Flight]:
