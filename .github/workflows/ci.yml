@@ -24,6 +24,52 @@ jobs:
       - run: uv run ruff check
       - run: uv run ruff format --check
 
+  unit:
+    defaults:
+      run:
+        working-directory: tracks/01-pytest-pydantic
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13", "3.14"]
+    env:
+      REQUIRE_SPARK: "0"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Run unit tests
+        run: uv run pytest -m "not integration"
+
+  integration:
+    defaults:
+      run:
+        working-directory: tracks/01-pytest-pydantic
+    runs-on: ubuntu-latest
+    env:
+      REQUIRE_SPARK: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: ${{ env.UV_VERSION }}
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --locked --group integration
+      - name: Verify Java
+        run: java -version
+      - name: Run integration tests
+        run: uv run pytest -m integration
+
   test:
     runs-on: ubuntu-latest
     strategy:

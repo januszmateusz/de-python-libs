@@ -7,6 +7,7 @@ from flights.loader import read_flights_csv
 from flights.models import Flight
 
 
+@pytest.mark.integration
 def test_read_flights_returns_flights_for_valid_file(
     make_flights_csv: MakeFlightsCsv,
 ) -> None:
@@ -48,6 +49,7 @@ def test_read_flights_returns_flights_for_valid_file(
     assert result == expected
 
 
+@pytest.mark.integration
 def test_read_flights_returns_empty_list_for_header_only_file(
     make_flights_csv: MakeFlightsCsv,
 ) -> None:
@@ -59,6 +61,7 @@ def test_read_flights_returns_empty_list_for_header_only_file(
     assert result == []
 
 
+@pytest.mark.integration
 def test_read_flights_raises_for_non_integer_delay(
     make_flights_csv: MakeFlightsCsv,
 ) -> None:
@@ -69,6 +72,7 @@ def test_read_flights_raises_for_non_integer_delay(
         read_flights_csv(csv_file)
 
 
+@pytest.mark.integration
 def test_read_flights_raises_for_missing_flight_number_column(
     make_flights_csv: MakeFlightsCsv,
 ) -> None:

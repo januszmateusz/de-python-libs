@@ -64,3 +64,11 @@ def reference_airports_csv(tmp_path_factory: pytest.TempPathFactory) -> Path:
 def line_ending(request: pytest.FixtureRequest) -> str:
     """Koniec linii w generowanych plikach CSV: LF i CRLF (każdy zależny test uruchamia się dwukrotnie)."""
     return str(request.param)
+
+
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
+    for item in items:
+        if "integration" in item.path.parts:
+            item.add_marker(pytest.mark.integration)

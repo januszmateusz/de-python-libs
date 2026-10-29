@@ -1,6 +1,9 @@
 from pathlib import Path
 
+import pytest
 
+
+@pytest.mark.integration
 def test_reference_airports_contains_main_hubs(
     reference_airports_csv: Path,
 ) -> None:
@@ -12,6 +15,7 @@ def test_reference_airports_contains_main_hubs(
     assert "GDN" in content
 
 
+@pytest.mark.integration
 def test_reference_airports_structure(reference_airports_csv: Path) -> None:
     """Test 2: Sprawdza nagłówek oraz liczbę wierszy w pliku referencyjnym."""
     lines = reference_airports_csv.read_text(encoding="utf-8").splitlines()

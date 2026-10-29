@@ -7,6 +7,7 @@ from flights.loader import read_flights_csv_lenient
 from flights.models import Flight
 
 
+@pytest.mark.integration
 def test_read_flights_csv_lenient_skips_rows_with_invalid_delay(
     make_flights_csv: MakeFlightsCsv,
 ) -> None:
@@ -38,6 +39,7 @@ def test_read_flights_csv_lenient_skips_rows_with_invalid_delay(
     ]
 
 
+@pytest.mark.integration
 def test_read_flights_csv_lenient_logs_warning_with_line_number_for_invalid_delay(
     make_flights_csv: MakeFlightsCsv,
     caplog: pytest.LogCaptureFixture,
@@ -63,6 +65,7 @@ def test_read_flights_csv_lenient_logs_warning_with_line_number_for_invalid_dela
     assert "line 3 in" in warnings[0].getMessage()
 
 
+@pytest.mark.integration
 def test_read_flights_csv_lenient__logs_nothing_for_valid_file(
     make_flights_csv: MakeFlightsCsv,
     caplog: pytest.LogCaptureFixture,

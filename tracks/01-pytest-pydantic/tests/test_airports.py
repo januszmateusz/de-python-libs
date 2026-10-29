@@ -27,6 +27,7 @@ def airport_db(airports_db_path: Path) -> Iterator[sqlite3.Connection]:
         conn.rollback()
 
 
+@pytest.mark.integration
 def test_airport_db_returns_warsaw_for_waw(airport_db: sqlite3.Connection) -> None:
     cursor = airport_db.cursor()
     cursor.execute("SELECT city FROM airports WHERE code = ?", ("WAW",))
@@ -34,6 +35,7 @@ def test_airport_db_returns_warsaw_for_waw(airport_db: sqlite3.Connection) -> No
     assert row == ("Warsaw",)
 
 
+@pytest.mark.integration
 def test_airport_insert_adds_airport(airport_db: sqlite3.Connection) -> None:
     """Test 1: Wstawia nowe lotnisko i sprawdza, że w tabeli są 3 pozycje."""
     airport_db.execute("INSERT INTO airports VALUES ('GDN', 'Gdansk')")
@@ -44,6 +46,7 @@ def test_airport_insert_adds_airport(airport_db: sqlite3.Connection) -> None:
     assert count == 3
 
 
+@pytest.mark.integration
 def test_airport_has_two_seed_airports(airport_db: sqlite3.Connection) -> None:
     """Test 2: Sprawdza, że na start w tabeli są dokładnie 2 lotniska początkowe.
 
