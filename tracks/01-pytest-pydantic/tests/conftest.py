@@ -72,3 +72,10 @@ def pytest_collection_modifyitems(
     for item in items:
         if "integration" in item.path.parts:
             item.add_marker(pytest.mark.integration)
+
+
+@pytest.fixture(autouse=True)
+def no_real_alert_webhook(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Siatka bezpieczeństwa: żaden test nie wyśle prawdziwego alertu, nawet przy błędnym patchu."""
+    monkeypatch.delenv("FLIGHTS_ALERT_WEBHOOK", raising=False)
+    
