@@ -1,6 +1,6 @@
+import logging
 from unittest.mock import Mock, create_autospec
 
-import logging
 import pytest
 
 from flights import pipeline
@@ -25,9 +25,7 @@ def test_check_on_time_performance_sends_alert_when_below_target(
 
     assert result == pytest.approx(0.25)
 
-    alert.assert_called_once_with(
-        "On-time performance 25% is below target 80%"
-    )
+    alert.assert_called_once_with("On-time performance 25% is below target 80%")
 
 
 @pytest.mark.parametrize(
@@ -71,9 +69,10 @@ def test_check_on_time_performance_survives_alert_failure(
         if record.name == "flights.pipeline" and record.levelno >= logging.ERROR
     ]
 
-    assert len(errors) == 1   
+    assert len(errors) == 1
     assert errors[0].exc_info is not None
     assert errors[0].exc_info[0] is ConnectionError
+
 
 def test_check_otp(monkeypatch):
     monkeypatch.setattr("flights.pipeline.on_time_performance", Mock(return_value=0.5))
@@ -84,5 +83,3 @@ def test_check_otp(monkeypatch):
 
     assert result == 0.5
     alert.assert_called()
-
-

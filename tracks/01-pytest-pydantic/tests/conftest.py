@@ -78,4 +78,3 @@ def pytest_collection_modifyitems(
 def no_real_alert_webhook(monkeypatch: pytest.MonkeyPatch) -> None:
     """Siatka bezpieczeństwa: żaden test nie wyśle prawdziwego alertu, nawet przy błędnym patchu."""
     monkeypatch.delenv("FLIGHTS_ALERT_WEBHOOK", raising=False)
-    
