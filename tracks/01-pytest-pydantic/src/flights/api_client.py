@@ -61,10 +61,10 @@ def _get_with_retries(
         is_last_attempt = attempt == max_attempts
         try:
             response = client.get(path, params=params)
-        except httpx.TimeoutException as exc:
+        except httpx.TransportError as exc:
             if is_last_attempt:
                 raise FlightApiError(
-                    f"Timeout calling {path} after {max_attempts} attempts"
+                    f"Network error calling {path} after {max_attempts} attempts"
                 ) from exc
         else:
             if response.status_code not in RETRYABLE_STATUS_CODES or is_last_attempt:

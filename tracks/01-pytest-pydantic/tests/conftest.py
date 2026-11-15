@@ -72,6 +72,11 @@ def pytest_collection_modifyitems(
     for item in items:
         if "integration" in item.path.parts:
             item.add_marker(pytest.mark.integration)
+        # TODO: jeśli test ma marker integration (z katalogu ALBO z pytestmark/dekoratora),
+        #       dodaj mu pytest.mark.enable_socket
+        #       podpowiedź: item.get_closest_marker("integration") zwraca marker albo None
+        if item.get_closest_marker("integration"):
+            item.add_marker(pytest.mark.enable_socket)
 
 
 @pytest.fixture(autouse=True)

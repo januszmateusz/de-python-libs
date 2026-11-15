@@ -33,6 +33,7 @@ addopts = [
     "--strict-markers",
     "--strict-config",
     "--import-mode=importlib",
+    "--disable-socket",
 ]
 markers = [
     "integration: tests touching real resources (files on disk, databases)",

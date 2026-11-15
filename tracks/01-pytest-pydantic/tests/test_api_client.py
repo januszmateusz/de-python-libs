@@ -125,3 +125,31 @@ def test_fetch_departures_does_not_retry_client_errors(
 
     assert route.call_count == 1
     assert sleeps == []
+
+
+def test_fetch_departures_keeps_timeout_as_cause_after_last_attempt(
+    respx_mock: respx.MockRouter,
+) -> None:
+    respx_mock.get(host=HOST, path=DEPARTURES_PATH).mock(
+        side_effect=httpx.ReadTimeout("read timed out")  # każde żądanie kończy się timeoutem
+    )
+    client = make_client(token="test-token")
+
+    with pytest.raises(FlightApiError, match="Network error") as exc_info:
+        fetch_departures(client, "WAW", DAY, max_attempts=2, sleep=lambda _: None)
+
+    assert isinstance(exc_info.value.__cause__, httpx.ReadTimeout)
+
+
+def test_fetch_departures_translates_connection_errors(
+    respx_mock: respx.MockRouter,
+) -> None:
+    respx_mock.get(host=HOST, path=DEPARTURES_PATH).mock(
+        side_effect=httpx.ConnectError("connection refused")
+    )
+    client = make_client(token="test-token")
+
+    with pytest.raises(FlightApiError) as exc_info:
+        fetch_departures(client, "WAW", DAY, max_attempts=2, sleep=lambda _: None)
+
+    assert isinstance(exc_info.value.__cause__, httpx.ConnectError)
