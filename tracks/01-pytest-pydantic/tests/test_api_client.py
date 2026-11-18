@@ -1,12 +1,16 @@
 from datetime import date
 from typing import Any
-import pytest
 
 import httpx
+import pytest
 import respx
 
-from flights.api_client import DEPARTURES_PATH, fetch_departures, make_client, FlightApiError
-
+from flights.api_client import (
+    DEPARTURES_PATH,
+    FlightApiError,
+    fetch_departures,
+    make_client,
+)
 
 HOST = "api.flights.example.com"
 DAY = date(2026, 11, 14)
@@ -107,7 +111,7 @@ def test_fetch_departures_gives_up_after_max_attempts(
     [
         pytest.param(404, id="not_found"),
         pytest.param(400, id="bad_request"),
-        pytest.param(401, id="unauthorized")
+        pytest.param(401, id="unauthorized"),
     ],
 )
 def test_fetch_departures_does_not_retry_client_errors(
@@ -131,7 +135,9 @@ def test_fetch_departures_keeps_timeout_as_cause_after_last_attempt(
     respx_mock: respx.MockRouter,
 ) -> None:
     respx_mock.get(host=HOST, path=DEPARTURES_PATH).mock(
-        side_effect=httpx.ReadTimeout("read timed out")  # każde żądanie kończy się timeoutem
+        side_effect=httpx.ReadTimeout(
+            "read timed out"
+        )  # każde żądanie kończy się timeoutem
     )
     client = make_client(token="test-token")
 

@@ -70,5 +70,5 @@ def _get_with_retries(
             if response.status_code not in RETRYABLE_STATUS_CODES or is_last_attempt:
                 return response
         sleep(BACKOFF_SECONDS * 2 ** (attempt - 1))
-        
+
     raise AssertionError("unreachable: loop always returns or raises")
